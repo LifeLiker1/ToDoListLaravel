@@ -104,7 +104,7 @@
                     </div>
 
                     <div class="card-footer text-muted text-center">
-                        Задача создана: {{ date('d.m.Y H:i', strtotime($details->created_at)) }}
+                        Задача создана: {{ date('d.m.Y H:i', strtotime($details->created_at->timezone('Europe/Moscow'))) }}
                     </div>
                 </div>
             </div>

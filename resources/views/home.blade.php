@@ -64,7 +64,7 @@
                         <div class="col">
                             <div class="card h-100 shadow-sm">
                                 <div class="card-header bg-primary text-white">
-                                    <h5 class="card-title mb-0">Задача  - {{ $task->title }}</h5>
+                                    <h5 class="card-title mb-0">Задача - {{ $task->title }}</h5>
                                 </div>
 
                                 <div class="card-body d-flex flex-column">
@@ -74,7 +74,8 @@
                                     </p>
 
                                     <div class="mb-3">
-                                        <span class="badge
+                                        <span
+                                            class="badge
                                     @if ($task->status === 0) bg-secondary
                                     @elseif($task->status === 2) bg-warning
                                     @else bg-success @endif">
@@ -96,7 +97,8 @@
                                 <div class="card-footer text-muted">
                                     <small>
                                         <i class="far fa-clock me-1"></i>
-                                        Создана: {{ \Carbon\Carbon::parse($task->created_at)->format('d.m.Y H:i') }}
+                                        Создана:
+                                        {{ \Carbon\Carbon::parse($task->created_at)->timezone('Europe/Moscow')->format('d.m.Y H:i') }}
                                     </small>
                                 </div>
                             </div>
