@@ -56,7 +56,6 @@
 
 <body>
     @include('header', ['myTitle' => 'Мой список задач', 'buttonTitle' => 'Создать новую задачу'])
-    @include("filter")
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10">
