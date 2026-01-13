@@ -1,3 +1,4 @@
+
  <form method="POST" action="{{ route('task.delete', $details->id) }}"
      onsubmit="return confirm('Вы уверены, что хотите удалить эту задачу?')">
      @csrf

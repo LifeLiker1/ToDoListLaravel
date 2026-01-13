@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ $details->title }}</title>
+    <title>Подробнее</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <style>
     .editModal {
@@ -18,7 +19,7 @@
         padding: 20px;
         border: 1px solid #ccc;
         width: 35vw;
-        height: 25vh;
+        height: auto;
     }
 
     .taskDiv {
@@ -59,49 +60,107 @@
 
 <body>
     @include('header', ['myTitle' => 'Задача ' . $details->title])
-    <div class="taskDiv">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10">
+                <div class="card my-4">
+                    <div class="card-body">
 
-        <h1>Задача: {{ $details->title }}</h1>
-        <p>Описание: {{ $details->description }}</p>
-        <button onclick=openEditModal()>Изменить</button>
-        @include('deleteButton')
-        <div id="editModal" class="editModal">
-            @include('modalHeader', ['myTitle' => 'Изменение задачи'])
-            <form method="POST" action="{{ route('task.update', $details->id) }}" class="form">
-                @csrf
-                @method('PUT')
+                        <div class="mb-3">
+                            <h5><b>Задача:</b></h5>
+                            <p class="fs-5">{{ $details->title }}</p>
+                        </div>
 
-                <input type="text" name="title" value="{{ $details->title }}" required class="form-input">
-                <textarea name="description" rows="5" class="form-input">{{ $details->description }}</textarea>
-                <div class="form-group">
-                    <label for="status">Статус:</label>
-                    <select id="status" name="status">
-                        <option value="0" {{ $details->status == '0' ? 'selected' : '' }}>
-                            Создана
-                        </option>
-                        <option value="2" {{ $details->status == '2' ? 'selected' : '' }}>
-                            В работе
-                        </option>
-                        <option value="1" {{ $details->status == '1' ? 'selected' : '' }}>
-                            Завершена
-                        </option>
-                    </select>
+                        <div class="mb-3">
+                            <h5><b>Описание:</b></h5>
+                            <div class="border rounded p-3">
+                                {{ $details->description }}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5><b>Статус:</b></h5>
+                            <p class="fs-5">
+                                @if ($details->status === 0)
+                                    <span class="badge bg-secondary">Создана</span>
+                                @elseif($details->status === 2)
+                                    <span class="badge bg-warning text-dark">В работе</span>
+                                @else
+                                    <span class="badge bg-success">Завершена</span>
+                                @endif
+                            </p>
+                        </div>
+
+                        <div class="row mt-6">
+                            <div class="col-md-6 mb-2">
+                                <button onclick="openEditModal()" class="btn btn-primary w-100 py-2">
+                                    Изменить
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                @include('deleteButton')
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-muted text-center">
+                        Задача создана: {{ date('d.m.Y H:i', strtotime($details->created_at)) }}
+                    </div>
                 </div>
-
-                <button type="submit">Сохранить</button>
-                <button type="button" onclick="closeEditModal()">Отмена</button>
-            </form>
+            </div>
         </div>
+    </div>
 
-        <script>
-            function openEditModal() {
-                document.getElementById('editModal').style.display = 'block';
-            }
+    <div id="editModal" class="editModal">
+        @include('modalHeader', ['myTitle' => 'Изменение задачи'])
+        <form method="POST" action="{{ route('task.update', $details->id) }}">
+            @csrf
+            @method('PUT')
 
-            function closeEditModal() {
-                document.getElementById('editModal').style.display = 'none';
-            }
-        </script>
+            <div class="form-group">
+                <label for="title">Заголовок задачи</label>
+                <input type="text" id="title" name="title" value="{{ $details->title }}" required
+                    class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Описание задачи</label>
+                <textarea id="description" name="description" rows="5" class="form-control">{{ $details->description }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Статус:</label>
+                <select id="status" name="status" class="form-control">
+                    <option value="0" {{ $details->status == '0' ? 'selected' : '' }}>
+                        Создана
+                    </option>
+                    <option value="2" {{ $details->status == '2' ? 'selected' : '' }}>
+                        В работе
+                    </option>
+                    <option value="1" {{ $details->status == '1' ? 'selected' : '' }}>
+                        Завершена
+                    </option>
+                </select>
+            </div>
+            <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                <button type="button" onclick="closeEditModal()" class="btn btn-warning flex-grow-1">Отмена</button>
+                <button type="submit" class="btn btn-success flex-grow-1">Сохранить</button>
+            </div>
+        </form>
+    </div>
+    </div>
+
+    </div>
+
+    <script>
+        function openEditModal() {
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+    </script>
     </div>
 </body>
 
