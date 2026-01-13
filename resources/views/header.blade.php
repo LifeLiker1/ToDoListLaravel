@@ -2,21 +2,29 @@
     .head {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: space-around;
+        background-color: rgb(48, 99, 200);
+        margin-bottom: 10px;
+        color: white;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
     }
 </style>
 
 <?
-$currentUrl = url()->current();
+$isHomePage = url()->current() === route('tasks.index');
 ?>
-@if ($currentUrl == 'http://127.0.0.1:8000')
+@if ($isHomePage)
     <div class="head">
         <h1>{{ $myTitle }}</h1>
-        <button><a href={{ route('task.createTask') }}>Добавить задачу</a></button>
+        <button onclick=openCreateModal()>Добавить задачу</button>
     </div>
-@elseif($currentUrl != 'http://127.0.0.1:8000')
+@else
     <div class="head">
         <h1>{{ $myTitle }}</h1>
-        <button onclick="window.history.back()">Назад</button>
+        <button><a href={{ route('tasks.index') }}>На главную</a></button>
     </div>
 @endif
