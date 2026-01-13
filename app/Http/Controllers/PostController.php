@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Task;
 
 class PostController extends Controller
 {
     public function show()
     {
-        $tasks = DB::table('tasks')->get();
+        $tasks = Task::all();
         return view('home', ['tasks' => $tasks]);
     }
 
     public function detailView($id)
     {
-        $details = DB::table('tasks')->find($id);
+        $details = Task::find($id);
         return view('taskDetailView', ['details' => $details]);
     }
 
@@ -31,7 +31,7 @@ class PostController extends Controller
             'status' => 'required|integer|in:0,1,2'
         ]);
 
-        DB::table('tasks')->insertGetId([
+        Task::create([
             'title' => $validated['title'],
             'description' => $validated['description'],
             'status' => $validated['status'],
@@ -41,6 +41,8 @@ class PostController extends Controller
         return redirect()->route('tasks.index');
     }
 
+    
+
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -48,14 +50,9 @@ class PostController extends Controller
             'description' => 'nullable|string',
             'status' => 'required|integer|in:0,1,2'
         ]);
-        $updated = DB::table('tasks')->where('id', $id)->update(
-            [
-                'title' => $validated['title'],
-                'description' => $validated['description'],
-                'status' => $validated['status'],
-            ]
-        );
-        if ($updated) {
+        $task = Task::find($id);
+        $task->update($validated);
+        if ($task) {
             return redirect()
                 ->route('task.detailView', $id)
                 ->with('success', 'Задача успешно обновлена');
@@ -69,7 +66,10 @@ class PostController extends Controller
 
     public function deleteTask($id)
     {
-        DB::table('tasks')->where('id',$id)->delete();
+        $task = Task::find($id);
+        if ($task) {
+            $task->delete();
+        }
         return redirect()->route('tasks.index');
     }
 }
